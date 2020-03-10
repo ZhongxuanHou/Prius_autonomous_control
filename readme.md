@@ -1,19 +1,7 @@
-# Lab Session 4
+
 
 This documentation describes the use of ROS, openCV and Point Cloud library in order to autonomously drive a simulation of Toyota Prius while avoiding obstacles and people in its path with the help of it's sensor data.
-#
-#```
-#source /opt/ros/kinetic/setup.sh
-#cd ~
-#mkdir -p catkin_ws/src
-#cd catkin_ws/src
-#catkin_init_workspace
-#git clone git@gitlab.3me.tudelft.nl:cor/me41025/students-1718/lab4/group07.git
-#git clone git@gitlab.3me.tudelft.nl:cor/me41025/simulator.git
-#cd ..
-#catkin_make
-#source devel/setup.sh
-#```
+
 The simulation can be run using the following command:
 ```
 roslaunch control_solution solution.launch
