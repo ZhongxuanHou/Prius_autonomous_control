@@ -1,0 +1,49 @@
+#include "ros/ros.h"
+#include "vision_msgs/Detection2DArray.h"
+#include "vision_msgs/Detection3DArray.h"
+#include "prius_msgs/Control.h"
+
+std::vector<vision_msgs::Detection2D> openCVDetections;
+ros::Publisher controlPublisher;
+bool pedestrianSpotted = false;
+
+void controlVehicle(void)
+{
+	prius_msgs::Control outMessage;
+
+	if (openCVDetections.size() > 0)
+	{
+		pedestrianSpotted = true;
+	}
+
+	if (pedestrianSpotted)
+	{
+		outMessage.throttle = 0;
+		outMessage.steer = 0;
+		outMessage.brake = 1;
+		controlPublisher.publish(outMessage);
+		return;
+	}
+
+	outMessage.throttle = 1;
+	controlPublisher.publish(outMessage);
+}
+
+void openCVCallback(const vision_msgs::Detection2DArray& msg)
+{
+	openCVDetections.clear();
+	for(int i = 0; i<msg.detections.size();i++){
+		if (msg.detections[i].bbox.size_x*msg.detections[i].bbox.size_y >= 25000)
+			openCVDetections.push_back(msg.detections[i]);
+	}
+	controlVehicle();
+}
+
+int main(int argc, char **argv)
+{
+    ros::init(argc, argv, "control_solution_node");
+    ros::NodeHandle nh;
+    ros::Subscriber openCVSubscriber = nh.subscribe("/opencv_solution_node/detections",1,openCVCallback);
+    controlPublisher = nh.advertise<prius_msgs::Control>("/prius",1000);
+    ros::spin();
+}

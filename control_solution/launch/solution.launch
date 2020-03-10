@@ -1,0 +1,29 @@
+<launch>
+    <include file="$(find car_simulation)/launch/simulation.launch">
+        <arg name="gazebo_gui" value="false"/>
+        
+        <arg name="rviz" value="true"/>
+    </include>
+
+    <node 
+        pkg="pcl_solution"
+        type="pcl_solution_node"
+        name="pcl_solution_node"
+        output="screen"
+        />
+    
+    <node
+        pkg="opencv_solution"
+        type="opencv_solution_node"
+        name="opencv_solution_node"
+        output="screen"
+        />
+
+    <node
+        pkg="control_solution"
+        type="control_solution_node"
+        name="control_solution_node"
+        output="screen"
+        />
+
+</launch>
